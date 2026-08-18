@@ -1,0 +1,109 @@
+// _chat.scss
+@use 'variables' as *;
+
+.message {
+  max-width: 60%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  color: $text-primary;
+  line-height: 1.4;
+  word-wrap: break-word;
+  position: relative;
+  &.input {
+    align-self: flex-end;
+    background-color: $bg-dark;
+    border: 1px solid $border-color;
+  }
+  &.output {
+    align-self: flex-start;
+    background-color: $bg-black;
+    border: 1px solid #333;
+  }
+}
+
+.message-content {
+  word-wrap: break-word;
+  line-height: 1.5;
+  code {
+    background: rgba(0,0,0,0.3);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+  strong { font-weight: bold; }
+  em { font-style: italic; }
+  a {
+    color: $accent-blue;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+  br { display: block; margin: 4px 0; }
+}
+
+.message-toolbar {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  opacity: 0.4;
+  transition: opacity $transition-fast;
+  button {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid $border-color;
+    color: $text-secondary;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background $transition-fast, color $transition-fast;
+    &:hover {
+      background: rgba(255,255,255,0.2);
+      color: $text-primary;
+    }
+    &:active { transform: scale(0.95); }
+  }
+}
+.message:hover .message-toolbar {
+  opacity: 1;
+}
+
+#statusArea {
+display: none;
+align-items: center;
+gap: 12px;
+padding: 6px 16px;
+background: $bg-secondary;
+border-top: 1px solid $border-color;
+border-bottom: 1px solid $border-color;
+color: $text-secondary;
+font-size: 14px;
+height: 38px;
+flex-shrink: 0;
+&.visible { display: flex; }
+}
+#statusIcon {
+font-family: monospace;
+font-size: 18px;
+width: 30px;
+text-align: center;
+}
+#statusText { flex: 1; }
+#statusTimer {
+font-family: monospace;
+font-size: 14px;
+color: #aaa;
+}
+#cancelRequest {
+background: #333;
+border: 1px solid #666;
+color: $text-primary;
+padding: 2px 12px;
+border-radius: 4px;
+cursor: pointer;
+font-size: 12px;
+&:hover { background: #555; }
+&:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+}

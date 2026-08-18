@@ -1,0 +1,23 @@
+// _toolbar.scss
+@use 'variables' as *;
+
+#toolbar {
+position: absolute;
+top: 58px;
+right: 10px;
+background-color: $bg-black;
+border-radius: $radius-base;
+padding: 6px 12px;
+display: flex;
+align-items: center;
+gap: 12px;
+z-index: $z-toolbar;
+border: 1px solid $border-color;
+.gear-icon {
+    font-size: 22px;
+    cursor: pointer;
+    color: $text-primary;
+    transition: transform $transition-medium;
+    &:hover { transform: rotate(60deg); }
+}
+}

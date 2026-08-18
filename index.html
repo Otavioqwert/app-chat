@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>Chat App - Pseudocódigo</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Meta tags para PWA -->
+  <meta name="theme-color" content="#404040" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Chat App" />
+
+  <!-- Favicon (opcional) -->
+  <link rel="icon" type="image/png" href="/icons/icon-96.png" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <!-- Bibliotecas -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Lista de conversas -->
+    <div id="scrollList"></div>
+
+    <!-- Área principal -->
+    <div id="chatArea">
+      <div id="messageHistory"></div>
+
+      <!-- Status -->
+      <div id="statusArea">
+        <span id="statusIcon"></span>
+        <span id="statusText">Pensando...</span>
+        <span id="statusTimer">00:00:00</span>
+        <button id="cancelRequest">Cancelar</button>
+      </div>
+
+      <!-- Input -->
+      <div id="inputBox">
+        <input type="text" id="messageInput" placeholder="Digite sua mensagem..." />
+        <button id="sendButton">Enviar</button>
+      </div>
+    </div>
+
+    <!-- Barra superior esquerda: chat+ e busca -->
+    <div id="topLeftBar">
+      <button id="chatPlusButton" title="Novo chat">+</button>
+      <div id="searchContainer">
+        <input type="text" id="searchInput" placeholder="Buscar sessão..." />
+        <span id="searchIcon">🔍</span>
+      </div>
+    </div>
+
+    <!-- Seletor de modelos -->
+    <div id="modelSelector">
+      <span id="modelDisplay">Model</span>
+      <span id="modelArrow">▼</span>
+      <div id="modelDropdown"></div>
+    </div>
+
+    <!-- Barra de ferramentas (engrenagem + instalação) -->
+    <div id="toolbar">
+      <span class="gear-icon" id="gearButton" title="Configurações">⚙️</span>
+    </div>
+
+    <!-- Modal de configurações -->
+    <div class="modal-overlay" id="configModal">
+      <div class="modal-content">
+        <span class="modal-close" id="modalClose">&times;</span>
+        <h2>Configurações</h2>
+        <div class="config-grid">
+          <div class="config-item">
+            <label for="cfgTokens">Tokens (máx.)</label>
+            <input type="number" id="cfgTokens" value="2048" min="1" max="8192" />
+          </div>
+          <div class="config-item">
+            <label for="cfgKey">Chave API (OpenRouter)</label>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="text" id="cfgKey" placeholder="sk-or-v1-..." style="flex:1;" />
+              <span id="keyStatus" style="font-size:18px;"></span>
+              <button id="clearKeyBtn" style="background:none; border:none; color:#ff6b6b; font-size:18px; cursor:pointer; display:none;" title="Remover chave da sessão">✕</button>
+            </div>
+            <span class="hint"><a href="https://openrouter.ai/keys" target="_blank">Obter chave</a></span>
+          </div>
+          <div class="config-item">
+            <label for="cfgTemp">Temperatura</label>
+            <input type="number" id="cfgTemp" value="0.7" step="0.01" min="0" max="2" />
+          </div>
+          <div class="config-item">
+            <label for="cfgTopP">Top P</label>
+            <input type="number" id="cfgTopP" value="1.0" step="0.01" min="0" max="1" />
+          </div>
+          <div class="config-item">
+            <label for="cfgMinK">Min K</label>
+            <input type="number" id="cfgMinK" value="1" min="0" />
+          </div>
+          <div class="config-item">
+            <label for="cfgMaxK">Max K</label>
+            <input type="number" id="cfgMaxK" value="50" min="1" />
+          </div>
+          <div class="config-item">
+            <label for="cfgMinP">Min P</label>
+            <input type="number" id="cfgMinP" value="0.0" step="0.01" min="0" max="1" />
+          </div>
+          <div class="config-item">
+            <label for="cfgMaxP">Max P</label>
+            <input type="number" id="cfgMaxP" value="1.0" step="0.01" min="0" max="1" />
+          </div>
+          <div class="config-item">
+            <label for="cfgMaxHistory">Máx. mensagens no histórico</label>
+            <input type="number" id="cfgMaxHistory" value="20" min="1" />
+          </div>
+          <div class="config-item">
+            <label for="cfgMemoryType">Lembrar quantidade</label>
+            <select id="cfgMemoryType">
+              <option value="palavras">Palavras</option>
+              <option value="tokens">Tokens</option>
+            </select>
+          </div>
+          <div class="config-item">
+            <label for="cfgTimeout">Tempo máximo (segundos)</label>
+            <input type="number" id="cfgTimeout" value="300" min="10" step="5" />
+          </div>
+          <div class="config-item checkbox-group full-width">
+            <label>Word of Bag:</label>
+            <label><input type="checkbox" id="wobVerbo" checked /> Verbo</label>
+            <label><input type="checkbox" id="wobSubjetivo" checked /> Subjetivo</label>
+            <label><input type="checkbox" id="wobAdjetivo" checked /> Adjetivo</label>
+            <label><input type="checkbox" id="wobAdverbo" checked /> Adverbo</label>
+          </div>
+          <div class="config-item">
+            <label for="cfgTextOrder">Ordem do texto</label>
+            <select id="cfgTextOrder">
+              <option value="cronologica">Cronológica</option>
+              <option value="reversa">Reversa</option>
+              <option value="aleatoria">Aleatória</option>
+            </select>
+          </div>
+          <div class="config-item checkbox-group">
+            <label><input type="checkbox" id="cfgRAG" /> RAG rápida</label>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button id="configCancel">Cancelar</button>
+          <button class="primary" id="configSave">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Container de toasts -->
+    <div id="toastContainer"></div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

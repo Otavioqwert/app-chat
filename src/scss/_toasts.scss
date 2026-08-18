@@ -1,0 +1,46 @@
+// _toasts.scss
+@use 'variables' as *;
+
+#toastContainer {
+position: fixed;
+top: 20px;
+right: 20px;
+z-index: $z-toast;
+display: flex;
+flex-direction: column;
+gap: 10px;
+max-width: 400px;
+pointer-events: none;
+}
+
+.toast {
+  background: #2a1a1a;
+  border-left: 6px solid $error-red;
+  color: $text-primary;
+  padding: 14px 20px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  font-size: 14px;
+  line-height: 1.4;
+  pointer-events: auto;
+  animation: slideIn 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .toast-icon { font-size: 20px; flex-shrink: 0; }
+  .toast-msg { flex: 1; }
+  .toast-close {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+    &:hover { color: $text-primary; }
+  }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(60px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
